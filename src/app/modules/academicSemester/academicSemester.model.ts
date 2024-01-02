@@ -1,47 +1,49 @@
-import { Schema, model } from "mongoose";
-import { TMonths, TAcademicSemseter } from "./academicSemester.interface";
+import { Schema, model } from "mongoose"
+import { TAcademicSemseter } from "./academicSemester.interface"
+import { academicSemesterCode, academicSemesterName, months } from "./academicSemester.constent"
 
-
-const monts: TMonths[] = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-];
-
-const acdemicSemesterSchema = new Schema<TAcademicSemseter>({
-    name: {
-        type: String,
-        required: true,
+const academicSemseterSchema = new Schema<TAcademicSemseter>(
+    {
+        name: {
+            type: String,
+            required: true,
+            enum: academicSemesterName
+        },
+        year: {
+            type: String,
+            required: true,
+        },
+        code: {
+            type: String,
+            required: true,
+            enum: academicSemesterCode
+        },
+        startMonth: {
+            type: String,
+            enum: months
+        },
+        endMonth: {
+            type: String,
+            enum: months
+        }
     },
-    year: {
-        type: Date,
-        required: true,
-    },
-    code: {
-        type: String,
-        required: true,
-    },
-    startMonth: {
-        type: String,
-        enum: monts
-    },
-    endMonth: {
-        type: String,
-        enum: monts
-    },
-},
     {
         timestamps: true,
     },
-);
+)
 
-export const AcademicSemester = model<TAcademicSemseter>('AcademicSemester', acdemicSemesterSchema)
+academicSemseterSchema.pre('save', async function (next) {
+    const isSemesterExists = await AcademicSemester.findOne({
+        year: this.year,
+        name: this.name,
+    })
+    if (isSemesterExists) {
+        throw new Error('semester already exists !!!')
+    }
+    next()
+})
+
+
+export const AcademicSemester = model<TAcademicSemseter>(
+    'AcademicSemester', academicSemseterSchema,
+)

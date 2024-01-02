@@ -1,46 +1,29 @@
-import { Schema } from "mongoose";
-import { TAcademicSemseter, TAcademicSemseterCode, TAcademicSemseterName, TMonths } from "./academicSemester.interface";
+import { z } from "zod";
+import { academicSemesterCode, academicSemesterName, months } from "./academicSemester.constent";
 
-const Monts: TMonths[] = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-];
 
-const AcademicSemseterName: TAcademicSemseterName[] = ['Autumn', 'summer', 'Fall'];
-const AcademicSemsetercode: TAcademicSemseterCode[] = ['01', '02', '03'];
-const academicSemesterSchema = new Schema<TAcademicSemseter>({
-    name: {
-        type: String,
-        required: true,
-        enum: AcademicSemseterName
-    },
-    year: {
-        type: Date,
-        required: true,
-    },
-    code: {
-        type: String,
-        required: true,
-        enum: AcademicSemsetercode
-    },
-    startMonth: {
-        type: String,
-        required: true,
-        enum: Monts
-    },
-    endMonth: {
-        type: String,
-        required: true,
-        enum: Monts
-    },
+const createAcademicSemesterValidationSchema = z.object({
+    body: z.object({
+        name: z.enum([...academicSemesterName] as [string, ...string[]]),
+        year: z.string(),
+        code: z.enum([...academicSemesterCode] as [string, ...string[]]),
+        startMonth: z.enum([...months] as [string, ...string[]]),
+        endMonth: z.enum([...months] as [string, ...string[]]),
+
+    })
+});
+const updateAcademicSemesterValidationSchema = z.object({
+    body: z.object({
+        name: z.enum([...academicSemesterName] as [string, ...string[]]).optional(),
+        year: z.string().optional(),
+        code: z.enum([...academicSemesterCode] as [string, ...string[]]).optional(),
+        startMonth: z.enum([...months] as [string, ...string[]]).optional(),
+        endMonth: z.enum([...months] as [string, ...string[]]).optional(),
+
+    })
 })
+
+export const AcademicSemesterValidation = {
+    createAcademicSemesterValidationSchema,
+    updateAcademicSemesterValidationSchema,
+}

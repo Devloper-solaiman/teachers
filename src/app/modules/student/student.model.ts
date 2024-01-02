@@ -70,7 +70,7 @@ const StudentSchema = new Schema<Student, StudentModel>({
         required: true,
     },
     dateofBirth: { type: String },
-    email: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
     contactNo: { type: String, required: true },
     emergencyContact: { type: String, required: true },
     bloodGroup: {
@@ -88,6 +88,10 @@ const StudentSchema = new Schema<Student, StudentModel>({
         required: true
     },
     profileimg: { type: String },
+    admissionSemester: {
+        type: Schema.Types.ObjectId,
+        ref: 'AcademicSemester',
+    },
     isDeleted: {
         type: Boolean,
         default: false,

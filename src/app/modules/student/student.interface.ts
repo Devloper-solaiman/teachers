@@ -35,7 +35,8 @@ export type Student = {
     permanentAddress: string;
     gurdian: Gurdian;
     localgurdian: localGuardian;
-    profileimg?: string
+    profileimg?: string;
+    admissionSemester: Types.ObjectId;
     isDeleted: boolean;
 }
 // for creating static
